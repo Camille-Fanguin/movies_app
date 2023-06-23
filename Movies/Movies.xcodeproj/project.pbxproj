@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		671CEAF22A444EFE00FEF492 /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CEAF12A444EFE00FEF492 /* EditProfile.swift */; };
 		671CEAF62A44845F00FEF492 /* TestEditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CEAF52A44845F00FEF492 /* TestEditProfile.swift */; };
+		671CEB142A45DFA300FEF492 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CEB132A45DFA300FEF492 /* PhotoPicker.swift */; };
 		A3DB09DA2A4342D10026D6C5 /* MoviesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DB09D92A4342D10026D6C5 /* MoviesApp.swift */; };
 		A3DB09DC2A4342D10026D6C5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DB09DB2A4342D10026D6C5 /* ContentView.swift */; };
 		A3DB09DE2A4342D30026D6C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3DB09DD2A4342D30026D6C5 /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		671CEAF12A444EFE00FEF492 /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		671CEAF52A44845F00FEF492 /* TestEditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEditProfile.swift; sourceTree = "<group>"; };
+		671CEB132A45DFA300FEF492 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		A3DB09D62A4342D10026D6C5 /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3DB09D92A4342D10026D6C5 /* MoviesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesApp.swift; sourceTree = "<group>"; };
 		A3DB09DB2A4342D10026D6C5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -40,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				671CEAF12A444EFE00FEF492 /* EditProfile.swift */,
+				671CEB132A45DFA300FEF492 /* PhotoPicker.swift */,
 				671CEAF52A44845F00FEF492 /* TestEditProfile.swift */,
 			);
 			path = Views;
@@ -186,6 +189,7 @@
 				A3DB09DC2A4342D10026D6C5 /* ContentView.swift in Sources */,
 				A3DB09DA2A4342D10026D6C5 /* MoviesApp.swift in Sources */,
 				671CEAF22A444EFE00FEF492 /* EditProfile.swift in Sources */,
+				671CEB142A45DFA300FEF492 /* PhotoPicker.swift in Sources */,
 				671CEAF62A44845F00FEF492 /* TestEditProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

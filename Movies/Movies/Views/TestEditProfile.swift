@@ -10,10 +10,13 @@ import SwiftUI
 struct TestEditProfile: View {
     @Binding var username: String
     var body: some View {
-        Text("It's working!")
-            .font(.title)
-        Text("\(username)")
-            .font(.title2)
+        VStack {
+            Text("It's working!")
+                .font(.title)
+                .bold()
+            Text("Pseudo: \(username)")
+                .font(.title2)
+        }
     }
 }
 

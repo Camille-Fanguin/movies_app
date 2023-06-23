@@ -10,6 +10,8 @@ import SwiftUI
 struct EditProfile: View {
     @State var username: String = "Jane Doe"
     @State var date = Date()
+    @State private var showPhotoPicker = false
+    @State private var selectedImage: UIImage? = nil
     var body: some View {
         NavigationStack {
             ZStack {
@@ -18,7 +20,7 @@ struct EditProfile: View {
                 VStack {
                     HStack {
                         NavigationLink {
-                            TestEditProfile(username: $username) // A remplacer soit par un retour à la page Profil, soit à enlever pour laisser le bouton Back de base
+                            TestEditProfile(username: $username)
                         } label: {
                             Image(systemName: "arrowshape.turn.up.backward.circle.fill")
                                 .resizable()
@@ -35,7 +37,7 @@ struct EditProfile: View {
                         Spacer()
                         
                         NavigationLink {
-                            TestEditProfile(username: $username) // A remplacer par un retour à la page Profil
+                            TestEditProfile(username: $username)
                         } label: {
                             Image(systemName: "checkmark.circle.fill")
                                 .resizable()
@@ -44,15 +46,15 @@ struct EditProfile: View {
                         }
                     }
                     .padding()
-                    
-                    NavigationLink {
-                        TestEditProfile(username: $username) // A remplacer par un accès à la galerie de l'Iphone
-                    } label: {
+
+                    Button(action: { showPhotoPicker = true }) {
                         ZStack {
-                            Image("ProfilePic")
-                                .resizable()
-                                .frame(width: 150, height: 150)
-                                .cornerRadius(100)
+                            if let image = selectedImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .frame(width: 150, height: 150)
+                                    .cornerRadius(100)
+                            }
                             
                             Circle()
                                 .fill(.black)
@@ -65,10 +67,24 @@ struct EditProfile: View {
                                 .foregroundColor(.white)
                                 .opacity(0.5)
                         }
-                        .padding()
                     }
+                    .fullScreenCover(isPresented: $showPhotoPicker) {
+                        PhotoPicker(filter: .images, limit: 1) { results in
+                            PhotoPicker.convertToUIImageArray(fromResults: results) { imagesOrNil, errorOrNil in
+                                if let error = errorOrNil {
+                                    print(error)
+                                }
+                                if let images = imagesOrNil {
+                                    if let first = images.first {
+                                        selectedImage = first
+                                    }
+                                }
+                            }
+                        }
+                        .edgesIgnoringSafeArea(.all)
+                    }
+                    .padding(.bottom)
                     
-                    VStack {
                         Text("Pseudo")
                             .foregroundColor(.white)
                             .bold()
@@ -86,11 +102,9 @@ struct EditProfile: View {
                                     .frame(width: 200, height: 20)
                                     .foregroundColor(.white)
                                     .accentColor(.red)
-                                    
                             }
                         }
-                    }
-                    .padding()
+                        .padding(.bottom)
                     
                     VStack {
                         Text("Date de naissance")
@@ -115,7 +129,6 @@ struct EditProfile: View {
                             }
                         }
                     }
-                    .padding()
                     Spacer()
                 }
             }
