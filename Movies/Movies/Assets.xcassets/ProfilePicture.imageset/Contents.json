@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "35 Times Cats Were Too Fast For The Camera And It Resulted In These Hilarious Blurry Pics.jpeg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "35 Times Cats Were Too Fast For The Camera And It Resulted In These Hilarious Blurry Pics 1.jpeg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "35 Times Cats Were Too Fast For The Camera And It Resulted In These Hilarious Blurry Pics 2.jpeg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

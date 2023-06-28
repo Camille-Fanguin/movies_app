@@ -20,7 +20,7 @@ struct EditProfileView: View {
                 VStack {
                     HStack {
                         NavigationLink {
-                            TestEditProfile(username: $username)
+                            ProfileView()
                         } label: {
                             Image(systemName: "arrowshape.turn.up.backward.circle.fill")
                                 .resizable()
@@ -37,7 +37,7 @@ struct EditProfileView: View {
                         Spacer()
                         
                         NavigationLink {
-                            TestEditProfile(username: $username)
+                            ProfileView()
                         } label: {
                             Image(systemName: "checkmark.circle.fill")
                                 .resizable()

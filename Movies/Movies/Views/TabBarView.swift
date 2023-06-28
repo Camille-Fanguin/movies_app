@@ -37,7 +37,7 @@ struct TabBarView: View {
                     Text("Favoris")
                 }
                 .tag(Screen.movies)
-            EditProfileView()
+            ProfileView()
                 .tabItem {
                     Image(systemName: "person")
                     Text("Profil")
