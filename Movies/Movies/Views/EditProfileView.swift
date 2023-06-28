@@ -2,12 +2,12 @@
 //  EditProfile.swift
 //  Movies
 //
-//  Created by Apprenant17 on 22/06/2023.
+//  Created by Cam on 22/06/2023.
 //
 
 import SwiftUI
 
-struct EditProfile: View {
+struct EditProfileView: View {
     @State var username: String = "Jane Doe"
     @State var date = Date()
     @State private var showPhotoPicker = false
@@ -136,9 +136,9 @@ struct EditProfile: View {
     }
 }
 
-struct EditProfile_Previews: PreviewProvider {
+struct EditProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        EditProfile()
+        EditProfileView()
     }
 }
 
