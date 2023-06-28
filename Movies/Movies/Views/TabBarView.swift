@@ -19,7 +19,8 @@ struct TabBarView: View {
     
     var body: some View {
         TabView(selection: $activeTab) {
-            MoviesView()
+            ListeFilmsView()
+                .environmentObject(FilmsViewModel())
                 .tabItem {
                     Image(systemName: "popcorn")
                     Text("Films")

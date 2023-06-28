@@ -19,14 +19,11 @@ struct EditProfileView: View {
                     .ignoresSafeArea()
                 VStack {
                     HStack {
-                        NavigationLink {
-                            ProfileView()
-                        } label: {
-                            Image(systemName: "arrowshape.turn.up.backward.circle.fill")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .foregroundColor(.gray)
-                        }
+                        Image(systemName: "checkmark.circle.fill")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .opacity(0)
+
                         Spacer()
                         
                         Text("Modifier")
