@@ -7,6 +7,9 @@
 import SwiftUI
 
 struct ProfileView: View {
+    // Tentative de changer l'image de profil par celle qu'on a sélectionné dans Edit ainsi que le pseudo
+    @Binding var ProfileName: String
+    @Binding var selectedImage: UIImage?
     
     var body: some View {
         NavigationStack{
@@ -19,20 +22,21 @@ struct ProfileView: View {
                         .edgesIgnoringSafeArea(.all)
                     HStack{
                         Spacer()
-                        Button {
-                            //
-                        } label: {
-                            Image(systemName:"gearshape").foregroundColor(.gray)
-                                .frame(alignment: .topLeading)
-                                .font(.system(size:20))
-                            .offset(x:-26, y:16)}
+                        // Bouton paramètres
+//                        Button {
+//                            //
+//                        } label: {
+//                            Image(systemName:"gearshape").foregroundColor(.gray)
+//                                .frame(alignment: .topLeading)
+//                                .font(.system(size:20))
+//                            .offset(x:-26, y:16)}
                         
                         
                     }
-                    ProfileInfoView(ProfileName: "Jane Doe", ProfilePicture: "ProfilePicture")
+                    ProfileInfoView(selectedImage: $selectedImage, ProfileName: $ProfileName)
                     
                     NavigationLink {
-                        EditProfileView()
+                        EditProfileView(ProfileName: "Jane Doe")
                     } label: {
                         Text("Modifier")
                             .font(.custom("Poppins-regular", size: 15))
@@ -97,9 +101,8 @@ struct ProfileView: View {
 }
 
 struct ProfileView_Previews: PreviewProvider {
-    
     static var previews: some View {
-        ProfileView()
+        ProfileView(ProfileName: .constant("Jane Doe"), selectedImage: .constant(UIImage(named: "ProfilePicture")!))
     }
 }
 
@@ -158,8 +161,9 @@ struct ProfileCompartimentsView: View {
 }
 
 struct ProfileInfoView: View {
-    let ProfileName: String
-    let ProfilePicture: String
+    @Binding var selectedImage: UIImage?
+    var defaulting = UIImage(named: "ProfilePicture")!
+    @Binding var ProfileName: String
     
     var body: some View {
         VStack{
@@ -167,7 +171,7 @@ struct ProfileInfoView: View {
                 .font(.custom("Poppins-semibold", size: 20)).foregroundColor(.white)
                 .padding()
             
-            Image(ProfilePicture)
+            Image(uiImage: selectedImage ?? defaulting)
                 .resizable()
                 .frame(width: 150, height: 150, alignment: .center)
                 .clipShape(Circle())
@@ -196,9 +200,12 @@ struct PreferedStatCellView: View {
                     .padding().frame(alignment: .topLeading)
                 Text(StatsDispayed).font(.custom("SF", size: 16)).fontWeight(.regular).foregroundColor(.white).frame(alignment: .topLeading)
             }
+            .padding()
             
-            
+            // 3 lignes permettant de retirer le "Profil", et le bouton Back
+            .navigationBarTitle("")
+            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
         }
-        .padding()
     }
 }

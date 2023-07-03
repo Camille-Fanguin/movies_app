@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct EditProfileView: View {
-    @State var username: String = "Jane Doe"
+    @State var ProfileName: String
     @State var date = Date()
-    @State private var showPhotoPicker = false
-    @State private var selectedImage: UIImage? = nil
+    @State var showPhotoPicker = false
+    @State var selectedImage: UIImage?
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -34,7 +35,7 @@ struct EditProfileView: View {
                         Spacer()
                         
                         NavigationLink {
-                            ProfileView()
+                            ProfileView(ProfileName: $ProfileName, selectedImage: $selectedImage)
                         } label: {
                             Image(systemName: "checkmark.circle.fill")
                                 .resizable()
@@ -93,7 +94,7 @@ struct EditProfileView: View {
                                 Image(systemName: "applepencil")
                                     .foregroundColor(.white)
                                     .font(.title2)
-                                TextField("\(username)", text: $username)
+                                TextField("\(ProfileName)", text: $ProfileName)
                                     .textContentType(.givenName)
                                     .border(.gray)
                                     .frame(width: 200, height: 20)
@@ -135,7 +136,7 @@ struct EditProfileView: View {
 
 struct EditProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        EditProfileView()
+        EditProfileView(ProfileName: "Jane Doe", selectedImage: UIImage(named: "ProfilePicture")!)
     }
 }
 

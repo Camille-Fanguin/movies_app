@@ -15,6 +15,9 @@ enum Screen {
 }
 
 struct TabBarView: View {
+    var defaulting = UIImage(named: "ProfilePicture")!
+    @Binding var ProfileName: String
+    
     @State private var activeTab: Screen = .movies
     
     var body: some View {
@@ -38,7 +41,7 @@ struct TabBarView: View {
                     Text("Favoris")
                 }
                 .tag(Screen.movies)
-            ProfileView()
+            ProfileView(ProfileName: $ProfileName, selectedImage: .constant(defaulting))
                 .tabItem {
                     Image(systemName: "person")
                     Text("Profil")
@@ -54,7 +57,7 @@ struct TabBarView: View {
 
 struct TabBarView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView()
+        TabBarView(ProfileName: .constant("Jane Doe")) // Pseudo de profil
     }
 }
 

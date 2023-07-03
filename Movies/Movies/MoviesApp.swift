@@ -11,7 +11,7 @@ import SwiftUI
 struct MoviesApp: App {
     var body: some Scene {
         WindowGroup {
-            TabBarView()
+            TabBarView(ProfileName: .constant("Jane Doe")) // Pseudo de profil
         }
     }
 }
