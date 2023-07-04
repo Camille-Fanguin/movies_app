@@ -15,7 +15,7 @@ struct Credits: Codable {
 struct Actor: Codable, Hashable {
     let id: Int
     let name: String
-    let profile_path: String
+    let profile_path: String?
     let character: String
 }
 

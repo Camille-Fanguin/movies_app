@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct MoviesApp: App {
+    var moviesVM:MoviesViewModel = MoviesViewModel()
+    var mv: MovieSearchViewModel = MovieSearchViewModel()
     var body: some Scene {
         WindowGroup {
             TabBarView(ProfileName: .constant("Jane Doe")) // Pseudo de profil
+                .environmentObject(moviesVM)
+                .environmentObject(mv)
         }
     }
 }

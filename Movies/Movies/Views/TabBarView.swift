@@ -21,39 +21,46 @@ struct TabBarView: View {
     @State private var activeTab: Screen = .movies
     
     var body: some View {
-        TabView(selection: $activeTab) {
-            ListeFilmsView()
-                .environmentObject(FilmsViewModel())
-                .tabItem {
-                    Image(systemName: "popcorn")
-                    Text("Films")
-                }
-                .tag(Screen.movies)
-            MoviesView()
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Recherche")
-                }
-                .tag(Screen.movies)
-            MoviesView()
-                .tabItem {
-                    Image(systemName: "bookmark")
-                    Text("Favoris")
-                }
-                .tag(Screen.movies)
-            ProfileView(ProfileName: $ProfileName, selectedImage: .constant(defaulting))
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Profil")
-                }
-                .tag(Screen.movies)
+        NavigationStack {
+            TabView(selection: $activeTab) {
+                MoviesView()
+                    .environmentObject(FilmsViewModel())
+                    .tabItem {
+                        Image(systemName: "popcorn")
+                        Text("Films")
+                    }
+                    .tag(Screen.movies)
+                
+                SearchView()
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                        Text("Recherche")
+                    }
+                    .tag(Screen.search)
+                
+                FavorisView()
+                    .tabItem {
+                        Image(systemName: "bookmark")
+                        Text("Favoris")
+                    }
+                    .tag(Screen.favorite)
+                
+                ProfileView(ProfileName: $ProfileName, selectedImage: .constant(defaulting))
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profil")
+                    }
+                    .tag(Screen.profile)
+                
+            }
+            .onAppear() {
+                setupTabBarAppearance()
+            }
+            .tint(.white)
         }
-        .onAppear() {
-            setupTabBarAppearance()
-        }
-        .tint(.white)
     }
 }
+
 
 struct TabBarView_Previews: PreviewProvider {
     static var previews: some View {

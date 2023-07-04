@@ -11,6 +11,9 @@ struct ProfileView: View {
     @Binding var ProfileName: String
     @Binding var selectedImage: UIImage?
     
+    @State var showModifier: Bool = false
+    @ObservedObject var movieStat: MovieStatsVM = MovieStatsVM()
+    
     var body: some View {
         NavigationStack{
             ScrollView() {
@@ -82,12 +85,13 @@ struct ProfileView: View {
                     }
                     ScrollView(.horizontal) {
                         HStack{
+                            let (totalTime, moviesNumber, favGenre) = movieStat.calculateStatsMovies()
                             
-                            PreferedStatCellView(TitleOfStats: "Temps", StatsDispayed: "18 heures")
+                            PreferedStatCellView(TitleOfStats: "Temps", StatsDispayed: "\(totalTime)")
                             
-                            PreferedGenreCellView()
+                            PreferedGenreCellView(movieStat: movieStat, genreName:favGenre)
                             
-                            PreferedStatCellView(TitleOfStats: "Films vus", StatsDispayed: "6")}
+                            PreferedStatCellView(TitleOfStats: "Films vus", StatsDispayed: "\(moviesNumber)")}
                     }
                 }//scroll
                 
@@ -202,10 +206,9 @@ struct PreferedStatCellView: View {
             }
             .padding()
             
-            // 3 lignes permettant de retirer le "Profil", et le bouton Back
-            .navigationBarTitle("")
+            
             .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
+            .navigationTitle("Profil")
         }
     }
 }

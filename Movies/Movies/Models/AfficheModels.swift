@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct AfficheUneTrack: Identifiable {
+struct AfficheTrack1: Identifiable {
     //Je fais une variable UUID() pour avoir un identifiant unique dans l'image a la une
    
     var id = UUID()
-    var imageAfficheUne: String
+    var imageAffiche1: String
 
 }
 struct AfficheTrack2: Identifiable {

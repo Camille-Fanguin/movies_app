@@ -9,7 +9,7 @@ import SwiftUI
 
 class FilmsViewModel: ObservableObject {
     
-    @Published var imageUne = [AfficheUneTrack(imageAfficheUne: "GuardiansL")]
+    @Published var imageUne = [AfficheTrack1(imageAffiche1: "GuardiansL")]
     
     @Published var afficheTab2 = [
         AfficheTrack2(imageAffiche2: "TheFlash"),
