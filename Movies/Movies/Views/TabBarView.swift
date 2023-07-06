@@ -4,6 +4,9 @@
 //
 //  Created by Marc on 27/06/2023.
 //
+// ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! //
+// ! ! Preview Xcode crash, utilisation du simulateur nécessaire ! ! //
+// ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! //
 
 import SwiftUI
 
@@ -15,13 +18,12 @@ enum Screen {
 }
 
 struct TabBarView: View {
-    var defaulting = UIImage(named: "ProfilePicture")!
     @Binding var ProfileName: String
+    @Binding var selectedImage: UIImage?
     
     @State private var activeTab: Screen = .movies
     
     var body: some View {
-        NavigationStack {
             TabView(selection: $activeTab) {
                 MoviesView()
                     .environmentObject(FilmsViewModel())
@@ -45,7 +47,7 @@ struct TabBarView: View {
                     }
                     .tag(Screen.favorite)
                 
-                ProfileView(ProfileName: $ProfileName, selectedImage: .constant(defaulting))
+                ProfileView(ProfileName: $ProfileName, selectedImage: $selectedImage)
                     .tabItem {
                         Image(systemName: "person")
                         Text("Profil")
@@ -56,17 +58,16 @@ struct TabBarView: View {
             .onAppear() {
                 setupTabBarAppearance()
             }
-            .tint(.white)
+            .accentColor(Color("SunsetOrange"))
         }
     }
-}
 
 
-struct TabBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        TabBarView(ProfileName: .constant("Jane Doe")) // Pseudo de profil
-    }
-}
+//struct TabBarView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TabBarView(ProfileName: .constant("Jane Doe"), selectedImage: .constant(defaulting))
+//    }
+//}
 
 extension TabBarView {
     private func setupTabBarAppearance() {
@@ -77,3 +78,4 @@ extension TabBarView {
         UITabBar.appearance().standardAppearance = appearance
     }
 }
+

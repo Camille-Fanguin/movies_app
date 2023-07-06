@@ -5,39 +5,36 @@
 //  Created by Apprenant 24 on 29/06/2023.
 //
 
-import Foundation
-
+import SwiftUI
 
 class MovieStatsVM: ObservableObject {
-    @Published var movies: [Movie] = []
+    @AppStorage("ViewdMovies") var movies: [Movie] = []
+    
     
     var data:[StatCharts] {
         [
-           .init(Genre:action, NumberOfMovies: numberMoviesGenre(genreOfMovie: action)),
-           .init(Genre:drama, NumberOfMovies: numberMoviesGenre(genreOfMovie: drama)),
-           .init(Genre:sf, NumberOfMovies: numberMoviesGenre(genreOfMovie: sf)),
- ]
+            .init(Genre:action, NumberOfMovies: numberMoviesGenre(genreOfMovie: action)),
+            .init(Genre:drama, NumberOfMovies: numberMoviesGenre(genreOfMovie: drama)),
+            .init(Genre:Crime, NumberOfMovies: numberMoviesGenre(genreOfMovie: Crime)),
+            .init(Genre:Romance, NumberOfMovies: numberMoviesGenre(genreOfMovie: Romance)),
+            .init(Genre:Familial, NumberOfMovies: numberMoviesGenre(genreOfMovie: Familial)),
+            .init(Genre:Animation, NumberOfMovies: numberMoviesGenre(genreOfMovie: Animation)),
+            .init(Genre:Comédie, NumberOfMovies: numberMoviesGenre(genreOfMovie: Comédie)),
+        ]
     }
-    //ajouter une fonction ajouter film
-  //  func numberMoviesGenre(genreOfMovie : Genre) -> Int
-//    { if
-//        //voir atelier filtre et compter le nb d'element du tableau filtré
-//
-//        return 0
-//
-//    }
-   
+
+    
     func numberMoviesGenre(genreOfMovie: Genre) -> Int {
+        
+        if movies.isEmpty {
+            return 0
+        } else {
             
-            if movies.isEmpty {
-                return 0
-            } else {
-       
-                return movies.filter { $0.genres.contains { genre in
-                    return genre.name == genreOfMovie.name}
-                 }.count
-            }
+            return movies.filter { $0.genres.contains { genre in
+                return genre.name == genreOfMovie.name}
+            }.count
         }
+    }
     
     // Fonction pour calculer le temps total, le nombre de films et le genre préféré
     func calculateStatsMovies() -> (totalTime: Int, moviesNumber: Int, favGenre: String) {
@@ -45,11 +42,11 @@ class MovieStatsVM: ObservableObject {
         var moviesNumber = 0
         var favGenre = ""
         var genreCounts = [String: Int]() //compter  les genres
-  
+        
         for movie in movies {
             totalTime += movie.runtime!
             moviesNumber += 1
-     //pour erreur genre
+            //pour erreur genre
             for genre  in movie.genres {
                 if let count = genreCounts[genre.name]{
                     genreCounts[genre.name] = count + 1
@@ -58,7 +55,7 @@ class MovieStatsVM: ObservableObject {
                 }
             }
         }
-       
+        
         
         //rechercher les genres les plus vus
         var maxCount = 0
@@ -71,5 +68,50 @@ class MovieStatsVM: ObservableObject {
         
         return (totalTime, moviesNumber, favGenre)
     }
+    
+    private let key = "ViewdMovies"
+    
+    func addToViewds(movie: Movie) {
+        if !movies.contains(where: { m in
+            movie.id == m.id
+        })
+        {
+            movies.append(movie)
+        }
+        else
+        {
+            deleteViewds(movie: movie)
+        }
+        
+    }
+    
+    func deleteViewds(movie:Movie){
+        movies.removeAll { m in
+            movie.id == m.id
+        }
+    }
 }
+extension Array: RawRepresentable where Element: Codable {
+    public init?(rawValue: String) {
+        guard let data = rawValue.data(using: .utf8),
+              let result = try? JSONDecoder().decode([Element].self, from: data)
+        else {
+            return nil
+        }
+        self = result
+    }
 
+    public var rawValue: String {
+        guard let data = try? JSONEncoder().encode(self),
+              let result = String(data: data, encoding: .utf8)
+        else {
+            return "[]"
+        }
+        return result
+    }
+}
+func minutesToHours(minutes: Int) -> (hours: Int, minutes: Int) {
+    let hours = minutes / 60
+    let remainingMinutes = minutes % 60
+    return (hours, remainingMinutes)
+}

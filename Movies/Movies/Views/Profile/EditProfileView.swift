@@ -24,7 +24,7 @@ struct EditProfileView: View {
                             .resizable()
                             .frame(width: 25, height: 25)
                             .opacity(0)
-
+                        
                         Spacer()
                         
                         Text("Modifier")
@@ -36,15 +36,18 @@ struct EditProfileView: View {
                         
                         NavigationLink {
                             ProfileView(ProfileName: $ProfileName, selectedImage: $selectedImage)
+                            
+                            
                         } label: {
                             Image(systemName: "checkmark.circle.fill")
                                 .resizable()
                                 .frame(width: 25, height: 25)
                                 .foregroundColor(.green)
                         }
+                        .tag(Screen.profile)
                     }
                     .padding()
-
+                    
                     Button(action: { showPhotoPicker = true }) {
                         ZStack {
                             if let image = selectedImage {
@@ -83,33 +86,33 @@ struct EditProfileView: View {
                     }
                     .padding(.bottom)
                     
-                        Text("Pseudo")
-                            .foregroundColor(.white)
-                            .bold()
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(.gray)
-                                .frame(width: 270, height: 50)
-                            HStack {
-                                Image(systemName: "applepencil")
-                                    .foregroundColor(.white)
-                                    .font(.title2)
-                                TextField("\(ProfileName)", text: $ProfileName)
-                                    .textContentType(.givenName)
-                                    .border(.gray)
-                                    .frame(width: 200, height: 20)
-                                    .foregroundColor(.white)
-                                    .accentColor(.red)
-                            }
+                    Text("Pseudo")
+                        .foregroundColor(.white)
+                        .bold()
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(.gray)
+                            .frame(width: 270, height: 50)
+                        HStack {
+                            Image(systemName: "applepencil")
+                                .foregroundColor(.white)
+                                .font(.title2)
+                            TextField("\(ProfileName)", text: $ProfileName)
+                                .textContentType(.givenName)
+                                .border(.gray)
+                                .frame(width: 200, height: 20)
+                                .foregroundColor(.white)
+                                .accentColor(.red)
                         }
-                        .padding(.bottom)
+                    }
+                    .padding(.bottom)
                     
                     VStack {
                         Text("Date de naissance")
                             .bold()
                             .foregroundColor(.white)
                         ZStack {
-                            RoundedRectangle(cornerRadius: 20)
+                            RoundedRectangle(cornerRadius: 10)
                                 .fill(.gray)
                                 .frame(width: 270, height: 50)
                             HStack {
@@ -130,6 +133,7 @@ struct EditProfileView: View {
                     Spacer()
                 }
             }
+        
         }
     }
 }

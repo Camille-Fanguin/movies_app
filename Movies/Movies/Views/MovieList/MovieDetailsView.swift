@@ -15,7 +15,15 @@ struct MovieDetailsView: View {
     @Binding var movieID: Int
     
     @StateObject var vm = MovieDetailsViewModel()
-
+    @ObservedObject var viewdMovies = ViewdMovies()
+    @EnvironmentObject var moviestat : MovieStatsVM
+    @StateObject var vmf = FavoriteMoviesVM()
+    
+    let randomImdb = Float.random(in: 7.0..<9.0)
+    
+//    @State private var isOnFavori = false // film favori (bookmark)
+//    @State private var isOnPasVu = false // film pas vu (checkmark)
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geo in
@@ -41,13 +49,26 @@ struct MovieDetailsView: View {
                         }
                         .overlay(alignment: .bottomLeading, content: {titleOverlay})
                         
+                        //bouton de vu
+                     
+//                        Button {
+//                            viewdMovies.addToViewds(movie: movie)
+//                        } label: {
+//                            Label("J'ai vu ce film", systemImage: "bookmark.fill")
+//                        }
+                       // .buttonStyle(.bordered)
+                        
+                        //.buttonStyle(GrowingButton())
+                        
                         HStack {
                             Text("\(movie.runtime ?? 0)min")
                             Text("•")
-                            Text(movie.title)
+                            Text(movie.originalTitle)
+                            Text("•")
+                            Text("IMDb : \(randomImdb, specifier: "%.1f")")
                             Spacer()
                         }
-                        .font(.caption)
+                        .font(.callout)
                         .foregroundColor(.gray)
                         .padding(.horizontal)
                         
@@ -55,65 +76,141 @@ struct MovieDetailsView: View {
                             Image(systemName: "calendar")
                             Text(movie.releaseDate)
                             Spacer()
+                            
+                            //bouton film favori à lier avec la page favori
+                            Button {
+                                Task{
+                                    await vmf.addMovieToFav(entree: movie)
+                                }
+                            } label: {
+                                Label("Fillm favori", systemImage: "bookmark")
+                            }
+                            .buttonStyle(.bordered)
+                            
+                            
+                            Spacer()
+                            
+                            //Bouton page films déjà vus
+                            Button {
+                                moviestat.addToViewds(movie: movie)
+                            } label: {
+                                Label("J'ai vu ce film", systemImage: "eye")
+                            }
+                            .buttonStyle(.bordered)
+                            // Toggle film favori
+//                            Toggle("Film favori", isOn: $isOnFavori)
+//                                       .toggleStyle(CheckToggleStyleFav())
+
                         }
                         .font(.caption)
                         .padding(.horizontal)
                         
-                        if let trailer = vm.trailerKey {
-                            NavigationLink(destination: TrailerView(videoID: vm.trailerKey ?? "")) {
-                                ButtonTrailerView()
+                        HStack{
+                           
+                            //toggle film pas vu
+//                            Toggle("Pas vu", isOn: $isOnPasVu)
+//                                       .toggleStyle(CheckToggleStylePasVu())
+//                            Spacer()
+                        }
+                        .font(.caption)
+                        .padding([.leading, .bottom, .trailing])
+                        
+                if let trailer = vm.trailerKey {
+                            NavigationLink(destination: TrailerView(videoID: trailer)) {
+                                ButtonTrailerView ()
+                                    .padding(.bottom)
+                                    
                             }
                         }
+                        
+                        //Spacer()
+                        
+                        
+//                        NavigationLink(destination: TrailerView(videoID: vm.trailerKey ?? "")) {
+//                            ButtonTrailerView()
+//                        }
                         
                         HStack {
                             Text("Synopsis")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                                .padding(.horizontal)
+                                .padding([.top, .leading, .bottom], 5.0)
+                                
+                                
+                                
+                                
                             Spacer()
                         }
                         
+                        
                         Text(movie.overview)
-                            .font(.caption2)
+                            //.font(.caption)
                             .foregroundColor(.gray)
                             .multilineTextAlignment(.leading)
-                            .padding(.horizontal)
-                        
+                            
+                            
+                       
                         HStack {
-                            Text("Acteurs")
+                            Text("Distribution des Rôles")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                                .padding(.horizontal)
+                                .padding([.leading, .bottom], 5.0)
+                                
+                                
+                                
                             Spacer()
                         }
+                        .padding(.top, 14.0)
+                        //.padding()
                         
                         ScrollView(.horizontal) {
-                            HStack {
-                                ForEach(vm.movieCredits?.cast ?? [], id: \.self) { item in
-                                    if let image = item.profile_path {
-                                        AsyncImage(url: URL(string: "\(imageBaseUrl)\(image)")) { image in
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                                .frame(width: 80, height: 80)
-                                                .clipShape(Circle())
-                                        } placeholder: {
-                                            Image(systemName: "person.circle.fill")
-                                                .resizable()
-                                                .frame(width: 80, height: 80)
-                                        }
-                                    } else {
-                                        Image(systemName: "person.circle.fill")
-                                            .resizable()
+                            //VStack {
+                                HStack{
+                                    
+                                        ForEach(vm.movieCredits?.cast ?? [], id: \.self) {
+                                            
+                                            
+                                            item in
+                                            
+                                            VStack{
+                                            if let image = item.profile_path {
+                                                AsyncImage(url: URL(string: "\(imageBaseUrl)\(image)")) { image in
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .frame(width: 80, height: 80)
+                                                        .clipShape(Circle())
+                                                } placeholder: {
+                                                    Image(systemName: "person.circle.fill")
+                                                        .resizable()
+                                                        .frame(width: 80, height: 80)
+                                                }
+                                            } else {
+                                                Image(systemName: "person.circle.fill")
+                                                    .resizable()
+                                                    .frame(width: 80, height: 80)
+                                            }
+                                            
+                                            VStack(alignment: .leading){
+                                                Text(item.name)
+                                                    .foregroundColor(Color("SunsetOrange"))
+                                    
+                                                Text(item.character)
+                                                    .foregroundColor(Color("Gray"))
+                                                  Spacer()
+                                            }
                                             .frame(width: 80, height: 80)
-                                    }
-                                    Text(item.name)
-                                        .foregroundColor(.red)
+                                        }//VStack
+                                            .padding()
+                                    }//ForEach
                                 }
-                            }
+                                
+                                
+                            //}//VStack
                         }
+                        .padding(.top, -3.0)
                         .background(Color("Background"))
                         .foregroundColor(.white)
                         .edgesIgnoringSafeArea(.all)
@@ -132,8 +229,8 @@ struct MovieDetailsView: View {
     
     private var titleOverlay: some View {
         HStack {
-            Text(vm.movieDetail?.originalTitle ?? "")
-                .font(.title2)
+            Text(vm.movieDetail?.title ?? "")
+                .font(.title)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
@@ -147,5 +244,68 @@ struct MovieDetailsView: View {
 struct MovieDetailsView_Previews: PreviewProvider {
     static var previews: some View {
         MovieDetailsView(movieID: .constant(934433))
+            .environmentObject(MovieStatsVM())
+        
+    }
+}
+
+// struc film favori
+struct CheckToggleStyleFav: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+            
+        } label: {
+            Label {
+                configuration.label
+            } icon: {
+                Image(systemName: configuration.isOn ? "bookmark.fill" : "bookmark")
+                    .foregroundStyle(configuration.isOn ? Color("SunsetOrange") : Color("Gray"))
+                    .accessibility(label: Text(configuration.isOn ? "Checked" : "Unchecked"))
+                
+                    .imageScale(.large)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+
+//struct GrowingButton: ButtonStyle {
+//    func makeBody(configuration: Configuration) -> some View {
+//        configuration.label
+//            .padding()
+//            .background(Color("SunsetOrange"))
+//            .foregroundStyle(.white)
+//            .frame(width: 44, height: 44)
+//            .clipShape(Capsule())
+//            .scaleEffect(configuration.isPressed ? 1.2 : 1)
+//            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
+//    }
+//}
+
+
+
+
+
+
+//struct film pas vu
+struct CheckToggleStylePasVu: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+            
+        } label: {
+            Label {
+                configuration.label
+            } icon: {
+                Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "checkmark.circle")
+                    .foregroundStyle(configuration.isOn ? Color("SunsetOrange") : Color("Gray"))
+                    .accessibility(label: Text(configuration.isOn ? "Checked" : "Unchecked"))
+                
+                    .imageScale(.large)
+            }
+        }
+        .buttonStyle(.plain)
     }
 }

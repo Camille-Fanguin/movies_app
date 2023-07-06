@@ -8,7 +8,7 @@ import SwiftUI
 import Charts
 
 struct PreferedGenreDetailView: View {
-    @ObservedObject var movieStat: MovieStatsVM
+    @EnvironmentObject var movieStat: MovieStatsVM
 
     var body: some View {
         ZStack{
@@ -16,7 +16,7 @@ struct PreferedGenreDetailView: View {
             Color("Background")
                 .edgesIgnoringSafeArea(.all)
             LinearGradient(gradient: Gradient(colors: [.blue, .purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all).opacity(0.2)
+                .edgesIgnoringSafeArea(.all).opacity(0.0)
             Chart {
                 ForEach(movieStat.data) { statChart in
                     BarMark(
@@ -26,12 +26,11 @@ struct PreferedGenreDetailView: View {
                     // .foregroundStyle(Gradient(colors: [.red,.purple]))
                     .foregroundStyle(Gradient(colors: [Color("DarkMagenta"), Color("SunsetOrange")]))
                 }
-                
             }
-            .frame(width: 250,height:250, alignment: .center)
+            .frame(width: 300,height:300, alignment: .center)
             
             
-        }        
+        }
     }
 }
 
@@ -39,7 +38,7 @@ struct PreferedGenreDetailView: View {
 
 struct PreferedGenreDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        PreferedGenreDetailView(movieStat: MovieStatsVM())
+        PreferedGenreDetailView().environmentObject(MovieStatsVM())
     }
 }
 

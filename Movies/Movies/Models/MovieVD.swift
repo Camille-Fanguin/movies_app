@@ -14,14 +14,14 @@ struct Genre: Codable {
 
 struct MovieVD: Codable, Identifiable { //ajout identifiable
     let id: Int
-    let originalTitle: String
-    let title: String
+    let originalTitle: String?
+    let title: String?
     let backdropPath: String?
     let runtime: Int?
-    let overview: String
-    let posterPath: String
-    let release_date: String
-    let vote_average: Float
+    let overview: String?
+    let posterPath: String?
+    let release_date: String?
+    let vote_average: Float?
     
     enum CodingKeys: String, CodingKey {
         case id

@@ -8,42 +8,95 @@
 import SwiftUI
 
 struct FavorisView: View {
-@EnvironmentObject var vm: MovieSearchViewModel
-var columns:[GridItem] = [
-    GridItem(spacing:0),
-    GridItem(spacing:0)
-]
-var body: some View {
-    VStack(alignment:.center, spacing: 50){
-        ScrollView(content: {
-            Spacer()
-            Text("Work In Reparation")
-//            LazyVGrid(columns: columns, content: {
-//                ForEach(vm.movieDetails!){ movie in
-//                    AsyncImage(url: URL(string:"https://imgur.com/qPPIXcL.jpg")){image in
-//                        image.image?.resizable()
-//                            .scaledToFill()
-//                    }
-//
-//                        HStack{
-//                            Text("\(movie.fields.title)")
-//                                .foregroundColor(.black)
-//                        }
-//                    }
-//                })
-            })
+    private let imageBaseUrl = "https://image.tmdb.org/t/p/original"
+    @EnvironmentObject var movieStat: MovieStatsVM
+    @StateObject var vm: MoviesViewModel = MoviesViewModel()
+    @StateObject var vmd: MovieDetailsViewModel = MovieDetailsViewModel()
+    @StateObject var vmf: FavoriteMoviesVM = FavoriteMoviesVM()
+    @State var showBtn: Bool = false
+    var body: some View {
+        NavigationStack{
+            ScrollView {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 20) {
+                    ForEach(vmf.movies) { movie in
+                        VStack {
+                            if(showBtn){
+                                Button(action: {
+                                    Task{
+                                        await vmf.getMovies()
+//                                        await vmf.toggleMovie(movieTitle: "Mario")
+                                    }
+                                    showBtn = false
+                                }, label: {
+                                    Image(systemName: "bookmark.circle.fill")
+                                        .font(.largeTitle)
+                                })
+                            } else {
+                                Button(action: {
+                                    Task{
+                                        //await vmf.getMovies()
+                                        vmf.toggleMovie(movieTitle: "Mario")
+                                    }
+                                    showBtn = true
+                                }, label: {
+                                    Image(systemName: "bookmark.circle")
+                                        .font(.largeTitle)
+                                })
+                            }
+                            if let backdropPath = movie.backdropPath {
+                                
+                                let imageUrl = imageBaseUrl + backdropPath
+                                
+                                AsyncImage(url: URL(string: imageUrl)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                    //Text(movie.title ?? "")
+                                        .font(.caption)
+                                } placeholder: {
+                                    Rectangle().foregroundColor(.gray)
+                                }
+                            } else {
+                                Rectangle().foregroundColor(.gray)
+                            }
+                        }
+                        .frame(width: 95, height: 138)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(6)
+                        .padding(5)
+                    }
+                }
+                .padding(10)
+            }
+            .onAppear(){
+                Task{
+                    //await vm.getPopularMovies()
+                    await vmd.getMovieDetails(movieID: 502356) // type MovieVD
+                    
+                    
+                    if let movie = vmd.movieDetail {
+                        await vmf.addMovieToFav(entree: movie) // type Movie
+                    }
+                    
+                }
+            }
+            .refreshable{
+                if(showBtn){
+                    await vmf.toggleMovie(movieTitle: "Mario")
+                }
+                print("le nombre de films en favori est : \(vmf.movies.count)")
+            }
         }
-//        .onAppear(){
-//            Task{
-//                await vm.fetchMovies()
-//            }
-//        }
     }
-}
-
-struct FavorisView_Previews: PreviewProvider {
-    static var previews: some View {
-        FavorisView()
-            .environmentObject(MovieSearchViewModel(movies: []))
+    
+    struct FavorisView_Previews: PreviewProvider {
+        static var previews: some View {
+            FavorisView()
+                .environmentObject(MovieStatsVM())
+        }
     }
 }

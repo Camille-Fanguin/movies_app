@@ -9,75 +9,57 @@ import SwiftUI
 
 struct SearchView: View {
     @EnvironmentObject var movieVM: MovieSearchViewModel
-    @StateObject var vm = MovieDetailsViewModel()
-    
-    @State var movieSearched: [AirTableSecondFloor]? = []
+    @StateObject var vm = MoviesViewModel()
+    @StateObject var vmd = MovieDetailsViewModel()
+    //@State var movieSearched: [AirTableSecondFloor]? = []
     @State var textContent: String = ""
     @State var btnclick:Bool = false
     @State var showingSheet:Bool = false
-    @State var movieID: Int = 502356
-    
-    var movies: [AirTableSecondFloor]? = [AirTableSecondFloor(fields: JSONInfo(id: "001", title: "Asterix", year: "2000"))]
-    
+    @State var movieID: Int = 0
+//    var movies: [AirTableSecondFloor]? = [AirTableSecondFloor(fields: JSONInfo(id: "001", title: "Asterix", year: "2000"))]
     var body: some View {
         ZStack{
             Rectangle()
                 .foregroundColor(Color("Background"))
                 .ignoresSafeArea(.all)
             VStack(alignment:.center){
-                AddSearchBar(textContent: $textContent, btnState: $btnclick)
-                
-                // NAVIGATION VIEW :
+                AddSearchBar(textContent: $textContent, btnState: $btnclick, movieID: $movieID)
                 
                 NavigationView(content: {
+                    
+                    
+                    
+                    
                     VStack{
                         
-                        // Condition pour que Search View s'affiche:
-                        // Si textContent vide -> affiche ça :
                         
                         if(textContent.isEmpty){
                             
                             // Affichage par défaut :
                             
-                            Text("En panne d'idées ? Laissez nous rerchercher un film pour vous:").foregroundColor(.white)
-                                .font(.custom("Graphik compact", size: 24)).foregroundColor(.white)
-                            VStack{
-                                HStack{
-//                                    Image(systemName: "arrow.clockwise")
-//                                        .foregroundColor(.white)
-//                                        .font(.largeTitle)
-//                                        .frame(width:20, height: 20)
-                                }
-                                //                                ZStack{
-                                //                                    RoundedRectangle(cornerRadius: 10).stroke(lineWidth: CGFloat(5.0)).foregroundColor(Color("Background")).frame(width:299, height:48).padding(10)
-                                //                                        .foregroundColor(.white)
-                                //
-                                //                                    Text("Search movies").foregroundColor(.white)
-                                //                                        .font(.system(size: 24))
-                                //                                }
-                            }
+                            Text("En panne d'idées ? Laissez nous recommander des films").foregroundColor(.white)
+                                .font(.custom("Graphik compact", size: 20)).foregroundColor(.white)
+                            
+                            
+                            
                         } else {
                             
                             // Affiche SearchResult dans ma Vue
-                            SearchResults(vm: MovieDetailsViewModel(), movieID: movieID, textToSearch: $textContent, btnClick: $showingSheet)
+                            if(btnclick){
+                                SearchResults(vmd: MovieDetailsViewModel(), vm: MoviesViewModel(), movieID: $movieID, textToSearch: $textContent, btnClick: $btnclick, showModal: $showingSheet)
+                            }
                         }
                         
                         NavigationLink(destination:{
-//                            SearchResults(vm: MovieDetailsViewModel(), movieID: $movieID, textToSearch: $textContent, btnClick: $showingSheet)
                             MovieDetailsView(movieID: $movieID)
+                            //SearchResults(vm: MovieDetailsViewModel(), movieID: $movieID, textToSearch: $textContent, btnClick: $showingSheet)
                             
                         }, label: {
-                            ZStack{
-                                RoundedRectangle(cornerRadius: 10).stroke(lineWidth: CGFloat(5.0)).foregroundColor(Color("Background")).frame(width:299, height:48).padding(10)
-                                    .foregroundColor(.white)
-                                
-                                Text("Search movies").foregroundColor(.white)
-                                    .font(.system(size: 24))
-                            }
                         }
-                        ).fullScreenCover(isPresented: $showingSheet){
-                            if let movie1 = vm.movieDetail {
-                                FavorisView()
+                        )
+                        .sheet(isPresented: $showingSheet){
+                            if movieID != nil {
+                                MovieDetailsView(movieID: $movieID)
                             }
                         }
                     }
@@ -85,57 +67,72 @@ struct SearchView: View {
                 ).foregroundColor(.white)
                     
             }
-        }
+        }.onAppear{
+            Task{
+                //await vm.getMovieSearch(textToSearch: textContent)
+                await vmd.getMovieDetails(movieID:movieID)
+                await vmd.getMovieTrailer(movieID: movieID)
+            }
+       }
         } // fin de ma ZStack
         
 }
 
 struct SearchResults: View {
-    @ObservedObject var vm: MovieDetailsViewModel
-    var movieID: Int
+    @ObservedObject var vmd: MovieDetailsViewModel
+    @ObservedObject var vm: MoviesViewModel
+    @Binding var movieID: Int
     @Binding var textToSearch: String
     @Binding var btnClick: Bool
+    @Binding var showModal: Bool
     @EnvironmentObject var movieVM: MovieSearchViewModel
-    var movies: [AirTableSecondFloor]?
+
     var body: some View{
-        VStack{
-            if let movies = movieVM.movieSearched{
-                List(movies){ movie in
+        
+            Text("")
+            .padding(.leading, 10)
+        VStack(alignment:.center){
+            Text("Search Results")
+                .font(.title3)
+            List(vm.movies){ movie in
                     VStack{
                         HStack{
-                            Text(movie.fields.title)
-                                .font(.title)
-                            Text(movie.fields.year)
+                            Text(movie.title ?? "")
+                                .foregroundColor(Color("Gray"))
+                                .opacity(1.0)
                                 .font(.title2)
-                            //Text(String(movie.fields.actors.first!))
-                            Text(movie.fields.id ?? "")
+                            //Text(movie.release_date ?? "")
+                            //.font(.title2)
                         }.padding()
                             .frame(maxWidth: 348, minHeight: 48)
-                            .cornerRadius(10).background(.gray)
+                            .cornerRadius(10).background(Color("Gray 2"))
                             .padding(.bottom, 10)
                         Button("Voir + de détail"){
-                            if let movie_id = movie.fields.id{
-                                //movieID = Int(movie_id) ?? 0
-                            }
+                            showModal = true
+                            movieID = vm.movies.first!.id
                             btnClick.toggle()
-                        }.buttonStyle(.plain)
+                        }.buttonStyle(.plain).foregroundColor(Color("DarkMagenta"))
                     }
                 }
-                .navigationTitle("Search results").navigationBarTitleDisplayMode(.inline)
-                .refreshable{
-                    Task{
-                        await movieVM.fetchMovies()
-                    }
-                }
+            
+        }
+        .navigationTitle("").navigationBarTitleDisplayMode(.automatic)
+        .onAppear{
+            Task{
+                //await movieVM.fetchMovies()
+                await vm.getMovieSearch(marioText:textToSearch)
+                await vmd.getMovieDetails(movieID: movieID)
+                await vmd.getMovieCredits(movieID: movieID)
+                await vmd.getMovieTrailer(movieID: movieID)
             }
         }
     }
-}
     
-struct SearchView_Previews: PreviewProvider {
-    static var previews: some View {
-        SearchView()
-            .preferredColorScheme(.dark)
-            .environmentObject(MovieSearchViewModel(movies: []))
+    struct SearchView_Previews: PreviewProvider {
+        static var previews: some View {
+            SearchView()
+                .preferredColorScheme(.dark)
+                .environmentObject(MovieSearchViewModel(movies: []))
+        }
     }
 }

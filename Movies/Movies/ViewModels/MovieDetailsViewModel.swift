@@ -11,7 +11,7 @@ class MovieDetailsViewModel: ObservableObject {
     private let endpoint = "https://api.themoviedb.org/3"
     private let language = "fr-FR"
     
-    @Published var movieDetail: Movie? 
+    @Published var movieDetail: Movie?
     @Published var trailerKey: String?
     @Published var movieCredits: Credits?
     

@@ -4,7 +4,7 @@
 //
 //  Created by Apprenant83 (Rémy D) on 22/06/2023.!!!!!!!
 //
-
+ 
 import SwiftUI
 
 struct MoviesView: View {
@@ -48,9 +48,10 @@ struct MoviesView: View {
                             Text("A la une")
                                 .foregroundColor(.white)
                                 .font(.system(size: 24))
+                                
                             Spacer()
                         }
-                        .padding(.leading, 11.0)
+                        
                         
                         HStack{
                             
@@ -109,17 +110,20 @@ struct MoviesView: View {
                             
                             //fin ForEach
                             
-                        }//fin HStack
-                        
+                        }
+                        .padding(.bottom)//fin HStack
+                        //.padding()
                         ///Affiches films actuellement/////////////
                         HStack{
+                            
                             Text("Actuellement")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 24))
+                                .padding(/*@START_MENU_TOKEN@*/.top, 0.0)
                             Spacer()
                         }//fin HStack
                         
-                        .padding(.leading, 11.0)
+                        //.padding(.leading, 11.0)
                         
                         ///////scrollview affiches actuellement////
                         ScrollView( .horizontal, showsIndicators: false) {
@@ -137,13 +141,14 @@ struct MoviesView: View {
                                         //ContentView()
                                         
                                     } label: {
-                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/original\(index.posterPath)")) //
+                                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/original\(index.posterPath ?? "")")) //
                                         { image in
                                             image
                                                 .resizable()
                                                 .padding(.all, 2.0)
-                                                .frame(width: 152, height: 202)
-                                                .cornerRadius(15)
+                                                //.frame(width: 152, height: 202)
+                                                .frame(width: 115, height: 150)
+                                                //.cornerRadius(15)
                                             
                                         } placeholder: {
                                             Color.gray
@@ -189,17 +194,19 @@ struct MoviesView: View {
                                 
                             }  //fin HStack
                             
+                            
                         } //fin scrollview
                         
-                        
+                                                
                         ///////////Films toujours à l'affiche/////
                         HStack{
                             Text("Toujours à l'affiche")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 24))
+                                .padding(.top)
                             Spacer()
                         }//fin HStack
-                        .padding(.leading, 11.0)
+                       // .padding(.leading, 11.0)
                         
                         
                         ///////scrollview affiches toujours à l'affiche/////
@@ -224,7 +231,8 @@ struct MoviesView: View {
                                             image
                                                 .resizable()
                                                 .padding(/*@START_MENU_TOKEN@*/.all, 2.0/*@END_MENU_TOKEN@*/)
-                                                .frame(width: 152, height: 202)
+                                                //.frame(width: 152, height: 202)
+                                                .frame(width: 115, height: 150)
                                                 .cornerRadius(15)
                                             
                                         } placeholder: {
@@ -258,9 +266,10 @@ struct MoviesView: View {
                             Text("Prochainement")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 24))
+                                .padding(.top)
                             Spacer()
                         }//fin HStack
-                        .padding(.leading, 11.0)
+                       // .padding(.leading, 11.0)
                         
                         
                         ///////scrollview affiches films joués prochainement/////
@@ -285,7 +294,8 @@ struct MoviesView: View {
                                             image
                                                 .resizable()
                                                 .padding(/*@START_MENU_TOKEN@*/.all, 2.0/*@END_MENU_TOKEN@*/)
-                                                .frame(width: 152, height: 202)
+                                               // .frame(width: 152, height: 202)
+                                                .frame(width: 115, height: 150)
                                                 .cornerRadius(15)
                                             
                                         } placeholder: {
